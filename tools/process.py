@@ -13,6 +13,7 @@ import tfimage as im
 import threading
 import time
 import multiprocessing
+import code
 
 edge_pool = None
 
@@ -20,7 +21,8 @@ edge_pool = None
 parser = argparse.ArgumentParser()
 parser.add_argument("--input_dir", required=True, help="path to folder containing images")
 parser.add_argument("--output_dir", required=True, help="output path")
-parser.add_argument("--operation", required=True, choices=["grayscale", "resize", "blank", "combine", "edges"])
+parser.add_argument("--operation", required=True,
+                    choices=["grayscale", "resize", "blank", "combine", "edges", "lowpoly"])
 parser.add_argument("--workers", type=int, default=1, help="number of workers")
 # resize
 parser.add_argument("--pad", action="store_true", help="pad instead of crop for resize operation")
@@ -188,7 +190,9 @@ imwrite(E, output_path);
             raise
         return im.load(png_file.name)
 
-
+def lowpoly(src):
+    code.interact(local=locals())
+    
 def process(src_path, dst_path):
     src = im.load(src_path)
 
@@ -202,6 +206,8 @@ def process(src_path, dst_path):
         dst = combine(src, src_path)
     elif a.operation == "edges":
         dst = edges(src)
+    elif a.operation == "lowpoly":
+        dst = lowpoly(src)
     else:
         raise Exception("invalid operation")
 
